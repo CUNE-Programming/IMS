@@ -1,0 +1,23 @@
+{
+    "tabWidth": 2,
+    "semi": true,
+    "bracketSameLine": true,
+    "endOfLine": "lf",
+    "trailingComma": "all",
+    "singleQuote": false,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "plugins": ["shufo/prettier-plugin-blade"],
+    "overrides": [
+        {
+            "files": ["*.blade.php"],
+            "options": {
+                "parser": "blade",
+                "tabWidth": 2,
+                "sortHtmlAttributes": "code-guide",
+                "sortTailwindcssClasses": true
+
+            }
+        }
+    ]
+}
