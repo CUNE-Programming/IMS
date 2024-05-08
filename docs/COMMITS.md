@@ -10,5 +10,7 @@ Below are listed all possible types for the project.
 | `man` | Maintence such as updates to dependencies |
 | `build` | Adjustments to the build pipeline for the project |
 | `ci` | Adjustments to the CI Pipeline for the project |
+| `style` | For any formatting updates |
+| `test` | Adding in tests to the project |
 
 In addition, the use of `!` to signify breaking changes, along with a descriptor, will be used.
