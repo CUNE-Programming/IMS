@@ -1,6 +1,5 @@
 <?php
 
-
 /*|=============================================================================|
   | helpers.php
   | Ian Kollipara <ian.kollipara@cune.edu>
@@ -8,14 +7,13 @@
   | This file contains helper functions that can be used throughout the
   |=============================================================================| */
 
-namespace App;
-
 /**
  * Get the values of an enum
  *
- * @param class-string $enum
+ * @param  class-string  $enum
  * @return array
  */
-function enum_values($enum) {
-    return array_column($enum::cases(), "value");
+function enum_values($enum)
+{
+    return array_column($enum::cases(), 'value');
 }

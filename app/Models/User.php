@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property ClassStanding $class_standing
+ * @property bool $is_coordinator
+ * @property string $gender
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
