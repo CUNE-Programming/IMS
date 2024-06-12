@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 /**
@@ -44,6 +45,11 @@ class Sport extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(Variant::class);
+    }
 
     public function picture(): Attribute
     {
