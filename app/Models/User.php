@@ -16,6 +16,10 @@ use Illuminate\Notifications\Notifiable;
  * @property ClassStanding $class_standing
  * @property bool $is_coordinator
  * @property string $gender
+ * @property \Carbon\Carbon|null $email_verified_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<Team> $teams
  */
 class User extends Authenticatable
 {
@@ -42,6 +46,18 @@ class User extends Authenticatable
     protected $hidden = [
         'remember_token',
     ];
+
+    // Relationships
+
+    /**
+     * Get the teams that the user is on.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Team>
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'players')->using(Player::class);
+    }
 
     /**
      * Get the attributes that should be cast.

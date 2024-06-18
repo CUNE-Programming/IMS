@@ -39,4 +39,14 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Denote not coordinator
+     */
+    public function notCoordinator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_coordinator' => false,
+        ]);
+    }
 }
