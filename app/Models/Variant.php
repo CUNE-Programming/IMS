@@ -22,7 +22,7 @@ class Variant extends Model
         'average_duration',
     ];
 
-        /**
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array<string, string>
@@ -40,5 +40,10 @@ class Variant extends Model
     public function sport(): BelongsTo
     {
         return $this->belongsTo(Sport::class);
+    }
+
+    public function seasons()
+    {
+        return $this->hasMany(Season::class);
     }
 }

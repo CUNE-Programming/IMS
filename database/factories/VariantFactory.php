@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Sport;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Variant>
@@ -22,7 +22,7 @@ class VariantFactory extends Factory
             'description' => fake()->paragraph(),
             'max_number_of_teams' => fake()->randomDigitNotZero(),
             'average_duration' => fake()->randomNumber(2),
-            'sport_id' => Sport::factory()->create(),
+            'sport_id' => Sport::factory(),
         ];
     }
 }
