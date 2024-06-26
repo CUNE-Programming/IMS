@@ -6,6 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $max_number_of_teams
+ * @property int $average_duration
+ * @property int $max_team_size
+ * @property int $min_girls
+ * @property int $min_boys
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \App\Models\Sport $sport
+ * @property-read \Illuminate\Database\Eloquent\Collection<Season> $seasons
+ */
 class Variant extends Model
 {
     use HasFactory;
