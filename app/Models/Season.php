@@ -109,6 +109,16 @@ class Season extends Model
         return $this->belongsTo(Variant::class);
     }
 
+    /**
+     * Get the free agents for the season.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<FreeAgent>
+     */
+    public function freeAgents()
+    {
+        return $this->hasMany(FreeAgent::class);
+    }
+
     // Scopes
 
     public function scopeFilterBySportName($query, string $sport_name)

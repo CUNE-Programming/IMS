@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<Team> $teams
+ * @property-read \Illuminate\Database\Eloquent\Collection<FreeAgent> $free_agents
  */
 class User extends Authenticatable
 {
@@ -57,6 +58,21 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'players')->using(Player::class);
+    }
+
+    public function freeAgents()
+    {
+        return $this->hasMany(FreeAgent::class);
+    }
+
+    // Methods
+
+    /**
+     * Return whether a user is a free agent for a given season.
+     */
+    public function isFreeAgent(Season $season): bool
+    {
+        return $this->free_agents->where('season_id', $season->id)->isNotEmpty();
     }
 
     /**
