@@ -26,9 +26,10 @@ class AdminCoordinatorsController
     public function create()
     {
         $variants = Variant::query()->withCount('coordinators')->get();
-        $variants = $variants->flatMap(fn ($variant) => [$variant->id => "$variant->name ($variant->coordinators_count)"])->flatten();
+        $variants = $variants->flatMap(fn ($variant) => [$variant->id => "{$variant->name} ({$variant->coordinators_count})"])->flatten();
         $users = User::query()->withCount('coordinators')->get();
-        $users = $users->flatMap(fn ($user) => [$user->id => "$user->name ($user->coordinators_count)"])->flatten();
+        $users = $users->flatMap(fn ($user) => [$user->id => "{$user->name} ({$user->coordinators_count})"])->flatten();
+
         return view('admin.coordinators.create', [
             'variants' => $variants,
             'users' => $users,
@@ -81,6 +82,6 @@ class AdminCoordinatorsController
 
         Coordinator::query()->whereIn('id', $validated['coordinator_id'])->delete();
 
-        return back(303)->with('success', __("Successfully removed the user as coordinator"));
+        return back(303)->with('success', __('Successfully removed the user as coordinator'));
     }
 }

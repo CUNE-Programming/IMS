@@ -120,7 +120,7 @@ class Variant extends Model
      */
     public function hasActiveSeason()
     {
-            return ! is_null($this->active_season);
+        return ! is_null($this->active_season);
     }
 
     /**

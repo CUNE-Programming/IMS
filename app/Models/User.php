@@ -126,6 +126,11 @@ class User extends Authenticatable
         return Mail::to($this)->{$sendNow ? 'send' : 'queue'}(new LoginMail($this, $routeName));
     }
 
+    public function scopeWhereCoordinator($query)
+    {
+        return $query->whereHas('coordinators');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -139,10 +144,5 @@ class User extends Authenticatable
             'class_standing' => ClassStanding::class,
             'gender' => Gender::class,
         ];
-    }
-
-    public function scopeWhereCoordinator($query)
-    {
-        return $query->whereHas('coordinators');
     }
 }
