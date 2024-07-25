@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255)->fulltext();
             $table->text('description');
-            $table->binary('picture')->nullable();
+            $table->string('image')->default('');
             $table->timestamps();
         });
     }

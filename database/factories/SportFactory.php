@@ -19,7 +19,7 @@ class SportFactory extends Factory
         return [
             'name' => fake()->word(),
             'description' => fake()->paragraph(),
-            'picture' => fake()->imageUrl(),
+            'image' => fake()->imageUrl(),
         ];
     }
 
@@ -27,7 +27,7 @@ class SportFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'picture' => null,
+                'image' => '',
             ];
         });
     }

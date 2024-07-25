@@ -14,11 +14,11 @@ return new class extends Migration
             $table->foreignIdFor(Sport::class)->constrained()->cascadeOnDelete();
             $table->string('name', 255)->fulltext();
             $table->text('description');
-            $table->tinyInteger('max_number_of_teams');
-            $table->integer('average_duration');
-            $table->tinyInteger('max_team_size')->nullable();
-            $table->tinyInteger('min_girls')->nullable();
-            $table->tinyInteger('min_boys')->nullable();
+            $table->unsignedtinyInteger('max_number_of_teams');
+            $table->unsignedinteger('average_duration');
+            $table->unsignedtinyInteger('max_team_size')->nullable();
+            $table->unsignedtinyInteger('min_girls')->nullable();
+            $table->unsignedtinyInteger('min_boys')->nullable();
             $table->timestamps();
         });
     }

@@ -15,7 +15,9 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Team::class)->constrained()->cascadeOnDelete();
             $table->dateTime('approved_at')->nullable();
-            $table->dateTime('vetoed_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->string('rejected_reason')->default('');
+            $table->dateTime('appealed_at')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'team_id']);

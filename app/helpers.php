@@ -7,15 +7,19 @@
   | This file contains helper functions that can be used throughout the
   |=============================================================================| */
 
-if (! function_exists('enum_values')) {
+if (! function_exists('in_range')) {
     /**
-     * Get the values of an enum
+     * Check if the given number is within the given range.
      *
-     * @param  class-string  $enum
-     * @return array
+     * @param  int  $check  The number to check.
+     * @param  int  $min  The minimum value of the range.
+     * @param  int  $max  The maximum value of the range.
+     * @param  bool  $inclusive  Whether the range is inclusive.
      */
-    function enum_values($enum)
+    function in_range(int $check, int $min, int $max, bool $inclusive = true): bool
     {
-        return array_column($enum::cases(), 'value');
+        return $inclusive
+            ? $check >= $min && $check <= $max
+            : $check > $min && $check < $max;
     }
 }

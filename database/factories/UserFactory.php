@@ -24,9 +24,10 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
-            'class_standing' => fake()->randomElement(enum_values(ClassStanding::class)),
-            'is_coordinator' => fake()->boolean(),
-            'gender' => fake()->randomElement(enum_values(Gender::class)),
+            'class_standing' => fake()->randomElement(ClassStanding::toValues()),
+            'is_admin' => false,
+            'phone_number' => fake()->phoneNumber(),
+            'gender' => fake()->randomElement(Gender::toValues()),
         ];
     }
 
@@ -41,12 +42,12 @@ class UserFactory extends Factory
     }
 
     /**
-     * Denote not coordinator
+     * Denote admin
      */
-    public function notCoordinator(): static
+    public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_coordinator' => false,
+            'is_admin' => true,
         ]);
     }
 }

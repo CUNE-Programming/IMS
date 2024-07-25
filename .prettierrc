@@ -7,13 +7,14 @@
     "singleQuote": false,
     "bracketSpacing": true,
     "arrowParens": "avoid",
-    "plugins": ["shufo/prettier-plugin-blade"],
+    "plugins": ["@shufo/prettier-plugin-blade"],
     "overrides": [
         {
             "files": ["*.blade.php"],
             "options": {
                 "parser": "blade",
                 "tabWidth": 2,
+                "wrapAttributes": "force-aligned",
                 "sortHtmlAttributes": "code-guide",
                 "sortTailwindcssClasses": true
 

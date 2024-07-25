@@ -1,3 +1,99 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@view-transition {
+    navigation: auto;
+}
+
+@font-face {
+    font-family: "Gotham Black";
+    src: url("../fonts/Gotham-Black.otf");
+}
+
+@font-face {
+    font-family: "Gotham Bold";
+    src: url("../fonts/Gotham-Bold.otf");
+}
+
+@font-face {
+    font-family: "Gotham Book";
+    src: url("../fonts/Gotham-Book.otf");
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+input[type="text"], input[type="email"], input[type="date"] {
+    @apply read-only:cursor-not-allowed
+}
+
+h1, h2 {
+    @apply font-cune-main;
+
+}
+
+h3, h4, h5, h6 {
+    @apply font-cune-sub;
+}
+
+p {
+    @apply font-cune-text;
+}
+
+@keyframes fromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+
+.from-right {
+    animation: fromRight 0.5s ease-in-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.pill-btn {
+    @apply text-cune-blue my-4 inline-block rounded-[2em] border-b border-t bg-[linear-gradient(90deg,_#172b54_0,_#142548_49%,_#d5af65_50%,_#d8b571)] bg-[length:205%_auto] bg-[100%] p-[calc(0.5rem-1px)_2.5rem] text-center font-extrabold transition-all hover:bg-[#ecf1f6] hover:bg-[0] hover:text-white hover:decoration-[#47719c] text-[1rem];
+}
+
+
+.btn {
+    @apply py-2 px-3 text-cune-blue bg-cune-wheat rounded hover:text-cune-nimbus hover:bg-cune-blue transition-colors font-cune-text disabled:opacity-80;
+}
+
+
+.modal-container {
+    @apply absolute left-0 top-0 z-50 h-full w-full hidden overflow-clip bg-cune-slate/40 data-[show="true"]:grid data-[show="false"]:hidden grid-cols-[0.5fr_2fr_0.5fr] grid-rows-[0.5fr_2fr_0.5fr] place-items-center;
+}

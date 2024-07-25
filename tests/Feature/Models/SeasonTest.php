@@ -1,60 +1,111 @@
 <?php
 
+use App\Enums\SeasonPeriod;
 use App\Models\Season;
+use Illuminate\Support\Carbon;
 
 use function Pest\Laravel\assertDatabaseCount;
+use function PHPUnit\Framework\assertTrue;
 
-// Create Test
-test('the season can be created', function () {
-    // Arrange
-    $season = Season::factory()->make();
+describe('Season', function () {
 
-    // Act
-    $season->save();
-    $season->refresh();
+    it('should create a new season', function () {
+        $season = Season::factory()->create();
+        expect($season->id)->toBeInt();
+        expect($season->name)->toBeString();
+        expect($season->start_date)->toBeInstanceOf(Carbon::class);
+        expect($season->end_date)->toBeInstanceOf(Carbon::class);
+    });
 
-    // Assert
-    expect($season->exists)->toBeTrue();
-    assertDatabaseCount('seasons', 1);
-    expect($season->is(Season::first()))->toBeTrue();
-});
+    it('should fail to save a season with an end date before the start date', function () {
+        $season = Season::factory()->create([
+            'start_date' => now(),
+            'end_date' => now()->subDay(),
+        ]);
+    })->throws(InvalidArgumentException::class);
 
-// Read Test
-test('the season can be read', function () {
-    // Arrange
-    Season::factory()->create();
+    it('should return a fall season', function () {
+        $season = Season::factory()->create([
+            'registration_start' => Carbon::create(2021, 8, 1),
+            'registration_end' => Carbon::create(2021, 9, 1),
+            'start_date' => Carbon::create(2021, 9, 1),
+            'end_date' => Carbon::create(2021, 11, 30),
+        ]);
+        expect($season->semester)->toBe('Fall');
+    });
 
-    // Act
+    it('should return a season as upcoming', function () {
+        $season = Season::factory()->create([
+            'registration_start' => now()->addDay(),
+            'registration_end' => now()->addDays(2),
+            'start_date' => now()->addDays(3),
+            'end_date' => now()->addDays(5),
+        ]);
 
-    // Assert
-    expect(Season::first())->not->toBeNull();
-});
+        assertTrue($season->period->equals(SeasonPeriod::Upcoming()));
+    });
 
-test('the season name is generated correctly', function () {
-    $season = Season::factory()->forSport(['name' => 'Basketball'])->forVariant(['name' => '3-on-3'])->create([
-        'start_date' => '2021-01-01',
-        'end_date' => '2021-05-01',
-        'registration_start' => '2020-12-01',
-        'registration_end' => '2020-12-31',
-    ]);
-    $expected_season_name = 'Spring 2021 Basketball Season (3-on-3)';
+    it('should return a season as past', function () {
+        $season = Season::factory()->create([
+            'registration_start' => now()->subDays(5),
+            'registration_end' => now()->subDays(3),
+            'start_date' => now()->subDays(2),
+            'end_date' => now()->subDay(),
+        ]);
 
-    expect($season->name)->toBe($expected_season_name);
-});
+        assertTrue($season->period->equals(SeasonPeriod::Past()));
+    });
 
-test('the season cannot have an end date before the start date', function () {
-    Season::factory()->create([
-        'start_date' => '2021-01-01',
-        'end_date' => '2020-12-31',
-    ]);
-})->throws(\InvalidArgumentException::class);
+    it('should return a season as registration', function () {
+        $season = Season::factory()->create([
+            'registration_start' => now()->subDay(),
+            'registration_end' => now()->addDay(),
+            'start_date' => now()->addDays(2),
+            'end_date' => now()->addDays(5),
+        ]);
 
-test('the season is active', function () {
-    $season = Season::factory()->create([
-        'start_date' => '2021-01-01',
-        'end_date' => '2021-05-01',
-        'registration_start' => '2020-12-01',
-        'registration_end' => '2020-12-31',
-    ]);
-    expect($season->is_active)->toBeFalse();
+        assertTrue($season->period->equals(SeasonPeriod::Registration()));
+    });
+
+    it('should return a season as games', function () {
+        $season = Season::factory()->create([
+            'registration_start' => now()->subDays(5),
+            'registration_end' => now()->subDays(3),
+            'start_date' => now()->subDays(2),
+            'end_date' => now()->addDay(),
+        ]);
+
+        assertTrue($season->period->equals(SeasonPeriod::Games()));
+    });
+
+    it('has variants', function () {
+        $season = Season::factory()->create();
+        expect($season->variant)->not->toBeNull();
+        assertDatabaseCount('variants', 1);
+    });
+
+    it('should return the teams that belong to the season', function () {
+        $season = Season::factory()->hasTeams(3)->create();
+        expect($season->teams)->toHaveCount(3);
+    });
+
+    it('should return the games that belong to the season', function () {
+        $season = Season::factory()->hasGames(3)->create();
+        expect($season->games)->toHaveCount(3);
+    });
+
+    it('should return the free agents that belong to the season', function () {
+        $season = Season::factory()->hasFreeAgents(3)->create();
+        expect($season->freeAgents)->toHaveCount(3);
+    });
+
+    it('should return zero active seasons', function () {
+        $season = Season::factory()->create([
+            'registration_start' => now()->subDays(5),
+            'registration_end' => now()->subDays(3),
+            'start_date' => now()->subDays(2),
+            'end_date' => now()->subDay(),
+        ]);
+        expect(Season::whereActive()->get())->toHaveCount(0);
+    });
 });

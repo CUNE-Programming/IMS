@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Sport;
 use App\Models\Variant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,10 +23,10 @@ class SeasonFactory extends Factory
         $end_date = fake()->dateTimeBetween($start_date, '+3 months');
 
         return [
-            'sport_id' => Sport::factory(),
             'variant_id' => Variant::factory(),
             'start_date' => $start_date->format('Y-m-d'),
             'end_date' => $end_date->format('Y-m-d'),
+            'description' => fake()->paragraphs(asText: true),
             'registration_start' => $registration_start->format('Y-m-d'),
             'registration_end' => $registration_end->format('Y-m-d'),
         ];

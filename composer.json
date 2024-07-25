@@ -6,16 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.4",
-        "socialiteproviders/microsoft": "^4.3"
+        "socialiteproviders/microsoft": "^4.3",
+        "spatie/laravel-enum": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.23",
+        "laravel/dusk": "^8.2",
         "laravel/pint": "^1.15",
         "laravel/sail": "^1.29",
         "mockery/mockery": "^1.6",

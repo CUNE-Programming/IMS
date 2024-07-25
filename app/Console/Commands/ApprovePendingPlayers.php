@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\ModerationStatus;
+use App\Enums\SeasonPeriod;
 use App\Models\Player;
 use Illuminate\Console\Command;
 
@@ -26,21 +28,25 @@ class ApprovePendingPlayers extends Command
      */
     public function handle()
     {
-        Player::query()->isPending()->map(function (Player $player) {
-            if ($player->season->is_active and $player->created_at->diffInDays(now()) >= 3) {
-                $player->approved_at = now();
-                $player->save();
+        Player::query()
+            ->pending()
+            ->get()
+            ->map(function (Player $player) {
+                if (! $player->season->period->equals(SeasonPeriod::Past()) and $player->created_at->diffInDays(now()) >= 3) {
+                    $player->approve();
 
-                return $player->refresh();
-            }
+                    return $player->refresh();
+                }
 
-            return $player;
-        })->each(function (Player $player) {
-            if ($player->isApproved()) {
-                $this->info("Player {$player->user->name} has been approved for {$player->season->name}.");
-            } else {
-                $this->error("Player {$player->user->name} could not be approved for {$player->season->name}.");
-            }
-        });
+                return $player;
+            })->each(function (Player $player) use (&$hasError) {
+                if ($player->status->equals(ModerationStatus::Approved())) {
+                    $this->info("Player {$player->user->name} has been approved for {$player->season->name}.");
+                } else {
+                    $this->error("Player {$player->user->name} could not be approved for {$player->season->name}.");
+                }
+            });
+
+        return 0;
     }
 }

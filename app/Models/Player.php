@@ -2,30 +2,37 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\Concerns\HasModeration;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Concerns\AsPivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * \App\Models\Player
- * -------------------
+ * A Player is a user that is on a team.
+ * A player represents a user that is on a team for a season.
+ * A player must be approved by a coordinator to be on a team.
+ * A player can be rejected by a coordinator.
+ * A team or player can appeal a rejection, and if the appeal is successful, the player is approved.
+ * Otherwise the player is rejected.
+ * If a player is pending for more than 3 days, the player is automatically approved.
  *
- * @property int $id
- * @property int $user_id
- * @property int $team_id
- * @property \Carbon\Carbon|null $approved_at
- * @property \Carbon\Carbon|null $vetoed_at
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read bool $approved
- * @property-read bool $vetoed
- * @property-read \App\Models\Team $team
- * @property-read \App\Models\User $user
+ * @property int $id The unique identifier for the player.
+ * @property int $user_id The unique identifier for the user.
+ * @property int $team_id The unique identifier for the team.
+ * @property \Illuminate\Support\Carbon|null $created_at The timestamp for when the player was created.
+ * @property \Illuminate\Support\Carbon|null $updated_at The timestamp for when the player was last updated.
+ * @property-read Team $team The team that the player is on.
+ * @property-read User $user The user that is a player.
+ * @property Season $season The season that the player is on.
  */
-class Player extends Model
+class Player extends Pivot
 {
-    use AsPivot, HasFactory;
+    use HasFactory, HasModeration;
+
+    public $timestamps = true;
+    public $incrementing = true;
+
+    protected $keyType = 'int';
+    protected $primaryKey = 'id';
 
     protected $table = 'players';
 
@@ -36,28 +43,11 @@ class Player extends Model
 
     protected $casts = [
         'approved_at' => 'datetime',
-        'vetoed_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'appealed_at' => 'datetime',
     ];
 
-    // Accessors & Mutators
-
-    public function approved(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => (bool) $this->approved_at,
-        );
-    }
-
-    public function vetoed(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => (bool) $this->vetoed_at,
-        );
-    }
-
-    // Relationships
+    /* ===== Relationships ===== */
 
     /**
      * Get the team that the player is on.
@@ -87,41 +77,5 @@ class Player extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    // Scopes
-
-    /**
-     * Scope a query to only include players that are not approved or vetoed.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
-     */
-    public function scopeIsPending($query)
-    {
-        return $query->whereNull('approved_at')->whereNull('vetoed_at');
-    }
-
-    // Custom Methods
-
-    public function veto(User $user)
-    {
-        if ($user->is_coordinator and is_null($this->approved_at)) {
-            $this->vetoed_at = now();
-
-            return $this->save();
-        }
-
-        return false;
-    }
-
-    public function approve(User $user)
-    {
-        if ($user->is_coordinator and is_null($this->vetoed_at)) {
-            $this->approved_at = now();
-
-            return $this->save();
-        }
-
-        return false;
     }
 }

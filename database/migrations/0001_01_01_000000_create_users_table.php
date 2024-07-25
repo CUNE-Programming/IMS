@@ -13,8 +13,9 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('email', 512)->unique();
-            $table->enum('class_standing', enum_values(ClassStanding::class));
-            $table->boolean('is_coordinator')->default(false);
+            $table->string('phone_number')->default('');
+            $table->enum('class_standing', ClassStanding::toValues());
+            $table->boolean('is_admin')->default(false);
             $table->string('gender', 255);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

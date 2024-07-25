@@ -14,6 +14,10 @@ return new class extends Migration
             $table->string('name', 255);
             $table->foreignIdFor(Season::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('team_captain_id')->nullable()->index();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->string('rejected_reason')->default('');
+            $table->dateTime('appealed_at')->nullable();
             $table->timestamps();
         });
     }
