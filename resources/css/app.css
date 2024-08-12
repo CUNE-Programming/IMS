@@ -97,3 +97,7 @@ p {
 .modal-container {
     @apply absolute left-0 top-0 z-50 h-full w-full hidden overflow-clip bg-cune-slate/40 data-[show="true"]:grid data-[show="false"]:hidden grid-cols-[0.5fr_2fr_0.5fr] grid-rows-[0.5fr_2fr_0.5fr] place-items-center;
 }
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0;
+}

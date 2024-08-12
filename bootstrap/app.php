@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo('/auth/login');
         $middleware->alias([
             'admin' => \App\Http\Middleware\RedirectIfAdmin::class,
+            'coordinator' => \App\Http\Middleware\RedirectIfCoordinator::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -9,7 +9,7 @@ description: A form input component
     "label" => null,
     "name",
     "id" => null,
-    "type",
+    "type" => "text",
     "value" => null,
     "wrapperClass" => ["flex", "flex-col"],
     "help" => null,
@@ -28,7 +28,7 @@ description: A form input component
          for="{{ $id }}">{{ $label }}</label>
   <input id="{{ $id }}"
          name="{{ $name }}"
-         {{ $attributes->class(["flex-1 rounded border-none font-cune-text focus:ring-cune-wheat", "ring-red-800" => $errors->has($name)])->merge(["type" => "text", "value" => old($name, $value ?? $model?->getAttribute($name))]) }}>
+         {{ $attributes->class(["flex-1 rounded border-none font-cune-text focus:ring-cune-wheat", "ring-red-800" => $errors->has($name)])->merge(["type" => $type, "value" => old($name, $value ?? $model?->getAttribute($name))]) }}>
   @if ($help)
     <p class="mx-2 text-sm text-cune-slate">{{ $help }}</p>
   @endif

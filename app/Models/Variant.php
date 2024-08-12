@@ -152,6 +152,17 @@ class Variant extends Model
     }
 
     /**
+     * Get the variants without an active season.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<self>
+     */
+    public function scopeDoesNotHaveActiveSeason($query)
+    {
+        return $query->whereDoesntHave('seasons', fn ($query) => $query->whereActive());
+    }
+
+    /**
      * Get the variants who the user is a coordinator for
      *
      * @param  \Illuminate\Database\Eloquent\Builder<self>  $query

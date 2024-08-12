@@ -8,6 +8,7 @@ use App\Enums\ClassStanding;
 use App\Enums\Gender;
 use App\Mail\Auth\LoginMail;
 use App\Services\Gravatar;
+use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -129,6 +130,20 @@ class User extends Authenticatable
     public function scopeWhereCoordinator($query)
     {
         return $query->whereHas('coordinators');
+    }
+
+    public function isCoordinator($season = null, $variant = null)
+    {
+        if (is_null($season) and is_null($variant)) {
+            return $this->coordinators()->exists();
+        }
+        if (is_null($variant)) {
+            return $this->coordinators()->whereHas('variant', fn ($query) => $query->whereHas('seasons', $season->id))->exists();
+        }
+        if (is_null($season)) {
+            return $this->coordinators()->whereHas('variant', $variant->id)->exists();
+        }
+        throw new Exception('You cannot provide a season and a variant.');
     }
 
     /**

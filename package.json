@@ -17,11 +17,16 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@fullcalendar/core": "^6.1.15",
+        "@fullcalendar/daygrid": "^6.1.15",
+        "@fullcalendar/list": "^6.1.15",
+        "@fullcalendar/timegrid": "^6.1.15",
         "@hotwired/stimulus": "^3.2.2",
         "filepond": "^4.31.1",
         "filepond-plugin-file-validate-type": "^1.2.9",
         "filepond-plugin-image-preview": "^4.6.12",
         "htmx.org": "^2.0.1",
-        "lucide": "^0.400.0"
+        "lucide": "^0.400.0",
+        "stimulus-use": "^0.52.2"
     }
 }

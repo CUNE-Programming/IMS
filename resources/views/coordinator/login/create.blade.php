@@ -1,28 +1,28 @@
 {{--
-file: resources/views/admin/login/create.blade.php
+file: resources/views/coordinator/login/create.blade.php
 author: Ian Kollipara
-date: 2024-07-20
-description: The login form for the admin panel.
+date: 2024-08-05
+description: The login form for the coordinator panel.
  --}}
 
 <x-layouts.app class="h-full w-full md:grid md:grid-cols-[0.33fr_1fr]"
-               title="IMS Admin | Login"
+               title="IMS Coordinator | Login"
                html-class="bg-cune-blue h-full">
   <div class="my-auto flex h-full w-full flex-col gap-3 p-8 text-center shadow-xl ring-4 ring-gray-300 md:bg-cune-white">
     <div class="mt-auto"><x-logo.large class="mx-auto w-64" /></div>
-    <h1 class="font-cune-main text-lg text-gray-800 md:text-3xl">Login to IMS Admin</h1>
-    @fragment("admin.login-form")
-      <form action="{{ route("admin.login.store") }}"
+    <h1 class="font-cune-main text-lg text-gray-800 md:text-3xl">Login to IMS Coordinator</h1>
+    @fragment("coordinator.login-form")
+      <form action="{{ route("coordinator.login.store") }}"
             method="post">
         @csrf
         <div class="mb-3 flex flex-col">
           <label class="hidden text-left text-gray-600"
-                 for="login-form--email">Your Admin Email</label>
+                 for="login-form--email">Your Coordinator Email</label>
           <input class="w-full rounded p-2 shadow-sm ring-1 ring-cune-blue/30 focus:ring-1 focus:ring-cune-blue"
                  id="login-form--email"
                  name="email"
                  type="email"
-                 placeholder="Your Admin Email...">
+                 placeholder="Your Coordinator Email...">
           <button class="pill-btn"
                   type="submit">Login</button>
         </div>
@@ -31,7 +31,7 @@ description: The login form for the admin panel.
         <a class="underline decoration-cune-blue hover:decoration-cune-wheat"
            href="">Go to Team Login</a>
         <a class="underline decoration-cune-blue hover:decoration-cune-wheat"
-           href="{{ route("coordinator.login.create") }}">Go to Coordinator Login</a>
+           href="{{ route("admin.login.create") }}">Go to Admin Login</a>
       </div>
     @endfragment
   </div>
