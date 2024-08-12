@@ -8,7 +8,12 @@ use App\Http\Controllers\Admin\AdminVariantsController;
 use App\Http\Controllers\Coordinator\CoordinatorLoginController;
 use App\Http\Controllers\Coordinator\CoordinatorSeasonGamesController;
 use App\Http\Controllers\Coordinator\CoordinatorSeasonsController;
+use App\Http\Controllers\Public\ContactUsController;
 use Illuminate\Support\Facades\Route;
+
+Route::view('/', 'index')->name('index');
+
+Route::resource('contact-us', ContactUsController::class)->only(['create', 'store'])->names('contact-us');
 
 Route::get('admin/login', [AdminLoginController::class, 'create'])->name('admin.login.create')->middleware('guest');
 Route::post('admin/login', [AdminLoginController::class, 'store'])->name('admin.login.store')->middleware('guest');
