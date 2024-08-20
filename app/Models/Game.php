@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\DB;
  * @property Carbon $updated_at The timestamp for when the game was last updated.
  * @property Season $season The season that the game belongs to.
  * @property-read GameStatus $status The status of the game.
+ * @property-read ?\Illuminate\Database\Eloquent\Collection<Team> $winners The team that won the game.
+ * @property-read \Illuminate\Database\Eloquent\Collection<Team> $teams The teams that are playing in the game.
  */
 class Game extends Model
 {
@@ -79,7 +81,8 @@ class Game extends Model
     {
         if ($this->status->isScheduled()) {
             return DB::transaction(function () use ($postponed_at) {
-                $this->postponed_at = $postponed_at;
+                $this->scheduled_at = $postponed_at;
+                $this->postponed_at = now();
 
                 return $this->save();
             });
@@ -95,7 +98,7 @@ class Game extends Model
      */
     public function cancel(): bool
     {
-        if ($this->status->isScheduled()) {
+        if (!$this->status->isCancelled()) {
             return DB::transaction(function () {
                 $this->cancelled_at = now();
 
@@ -121,7 +124,7 @@ class Game extends Model
                     $team = $pair[0];
                     $score = $pair[1];
                     GameTeam::where('game_id', $this->id)
-                        ->where('team_id', $team->id)
+                        ->where('team_id', $team?->id ?? $team)
                         ->update(['score' => $score]);
                 });
 
@@ -130,6 +133,17 @@ class Game extends Model
         }
 
         return false;
+    }
+
+    public static function createWithTeams($teams, array $attributes): static
+    {
+        return DB::transaction(function () use ($teams, $attributes) {
+            $game = new static($attributes);
+            $game->save();
+            $game->teams()->attach($teams);
+
+            return $game;
+        });
     }
 
     /* ===== Accessors and Mutators ===== */
@@ -173,4 +187,5 @@ class Game extends Model
             }
         );
     }
+
 }

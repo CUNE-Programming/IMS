@@ -17,8 +17,8 @@ description: The edit view for the sports in the admin panel.
       <h1 class="text-3xl">Edit Sport</h1>
       <a class="flex items-center gap-1 rounded-lg bg-cune-blue px-3 py-2 font-semibold text-cune-white hover:bg-gray-900"
          href="{{ route("admin.sports.index") }}">
-        <i class="size-4"
-           data-lucide="arrow-left"></i>
+        <x-tabler-arrow-left class="size-4"
+                             data-lucide="arrow-left"></x-tabler-arrow-left>
         Go Back
       </a>
     </div>
@@ -35,8 +35,8 @@ description: The edit view for the sports in the admin panel.
           <a class="flex w-full items-center"
              href="#">
             {{ $variant->name }}
-            <i class="size-4 opacity-0 transition-all group-hover:translate-x-5 group-hover:opacity-100 group-hover:duration-100"
-               data-lucide="arrow-right"></i>
+            <x-tabler-arrow-right class="size-4 opacity-0 transition-all group-hover:translate-x-5 group-hover:opacity-100 group-hover:duration-100"
+                                  data-lucide="arrow-right"></x-tabler-arrow-right>
           </a>
         </li>
       @endforeach

@@ -29,7 +29,9 @@ use Illuminate\Support\Facades\Mail;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<Team> $teams
+ * @property-read \Illuminate\Database\Eloquent\Collection<Team> $captains
  * @property-read \Illuminate\Database\Eloquent\Collection<FreeAgent> $freeAgents
+ * @property-read \Illuminate\Database\Eloquent\Collection<Coordinator> $coordinators
  * @property-read string $avatar
  * @property bool $is_admin
  */
@@ -59,6 +61,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $attributes = [
+        'class_standing' => 'freshman',
+        'gender' => 'male',
+    ];
+
     /**
      * Get a user by their email address.
      *
@@ -83,6 +90,16 @@ class User extends Authenticatable
             ->using(Player::class)
             ->withTimestamps()
             ->withPivot(['approved_at', 'rejected_at', 'rejected_reason', 'appealed_at']);
+    }
+
+    /**
+     * Get the teams that the user captains.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Team>
+     */
+    public function captains()
+    {
+        return $this->hasMany(Team::class, 'team_captain_id');
     }
 
     public function freeAgents()
@@ -111,9 +128,19 @@ class User extends Authenticatable
     /**
      * Return whether a user is a free agent for a given season.
      */
-    public function isFreeAgentIn(Season $season): bool
+    public function isFreeAgentIn(?Season $season): bool
     {
-        return $this->freeAgents()->where('season_id', $season->id)->exists();
+        return $this->freeAgents()->where('season_id', $season?->id)->exists();
+    }
+
+    public function isPlayerIn(?Season $season): bool
+    {
+        return $this->teams()->where('season_id', $season?->id)->exists();
+    }
+
+    public function isCaptainIn(?Season $season): bool
+    {
+        return $this->captains()->where('season_id', $season?->id)->exists();
     }
 
     /**
@@ -138,12 +165,20 @@ class User extends Authenticatable
             return $this->coordinators()->exists();
         }
         if (is_null($variant)) {
-            return $this->coordinators()->whereHas('variant', fn ($query) => $query->whereHas('seasons', $season->id))->exists();
+            return $this->coordinators()->whereHas('variant', fn ($query) => $query->whereHas('seasons', fn($q2) => $q2->where('seasons.id', $season->id)))->exists();
         }
         if (is_null($season)) {
-            return $this->coordinators()->whereHas('variant', $variant->id)->exists();
+            return $this->coordinators()->whereHas('variant', fn($query) => $query->where('id', $variant->id))->exists();
         }
         throw new Exception('You cannot provide a season and a variant.');
+    }
+
+    public function getTeamForSeason(Season $season)
+    {
+        if($this->isCaptainIn($season)) {
+            return $this->captains()->where('season_id', $season->id)->first();
+        }
+        return $this->teams()->where('season_id', $season->id)->first();
     }
 
     /**

@@ -12,6 +12,7 @@ description: A form textarea component
     "value" => null,
     "wrapperClass" => ["flex", "flex-col"],
     "help" => null,
+    "rich" => false,
 ])
 
 @php
@@ -22,14 +23,22 @@ description: A form textarea component
 
 @aware(["model"])
 
-<div @class($wrapperClass)>
+<div x-data
+     @class($wrapperClass)>
   <label class="font-cune-sub"
          for="{{ $id }}">{{ $label }}</label>
-  <textarea id="{{ $id }}"
-            name="{{ $name }}"
-            {{ $attributes->class(["flex-1", "rounded", "border-none", "font-cune-text", "focus:ring-cune-wheat", "ring-red-800" => $errors->has($name)]) }}>
-            {{ old($name, $value ?? $model?->getAttribute($name)) }}
-  </textarea>
+  @if ($rich)
+    <input id="{{ $id }}"
+           name="{{ $name }}"
+           type="hidden"
+           value="{{ old($name, $value ?? $model?->getAttribute($name)) }}">
+    <trix-editor input="{{ $id }}"
+                 {{ $attributes->class(["flex-1", "rounded", "border-none", "font-cune-text", "focus:ring-cune-wheat", "bg-white", "ring-red-800" => $errors->has($name)]) }}></trix-editor>
+  @else
+    <textarea id="{{ $id }}"
+              name="{{ $name }}"
+              {{ $attributes->class(["flex-1", "rounded", "border-none", "font-cune-text", "focus:ring-cune-wheat", "ring-red-800" => $errors->has($name)]) }}>{{ old($name, $value ?? $model?->getAttribute($name)) }}</textarea>
+  @endif
   @if ($help)
     <p class="mx-2 text-sm text-cune-slate">{{ $help }}</p>
   @endif

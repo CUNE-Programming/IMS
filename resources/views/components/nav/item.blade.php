@@ -8,11 +8,12 @@ description: The navigation item component for the admin panel.
 @props(["route", "routeParams" => [], "icon"])
 
 @php
-  $isActive = Route::currentRouteName() === $route;
+  $isActive = request()->routeIs($route);
 @endphp
 
 <li>
   <a href="{{ route($route, $routeParams) }}"
+     x-on:click="if(isMobile) { show = false }"
      @class([
          "bg-gray-700" => $isActive,
          "text-gray-300" => !$isActive,
@@ -27,8 +28,8 @@ description: The navigation item component for the admin panel.
          "hover:bg-gray-700",
          "hover:text-cune-white",
      ])>
-    <i class="size-5 flex-shrink-0"
-       data-lucide="{{ $icon }}"></i>
+    <x-dynamic-component class="size-5 flex-shrink-0"
+                         component="tabler-{{ $icon }}" />
     {{ $slot }}
   </a>
 </li>

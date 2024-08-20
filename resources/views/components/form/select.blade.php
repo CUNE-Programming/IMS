@@ -9,11 +9,12 @@ description: A form select component
     "label" => null,
     "name",
     "id" => null,
-    "options",
+    "options" => [],
     "value" => null,
     "wrapperClass" => ["flex", "flex-col"],
     "multiple" => false,
     "help" => null,
+    "config" => "{}",
 ])
 
 @php
@@ -29,6 +30,7 @@ description: A form select component
          for="{{ $id }}">{{ $label }}</label>
   <select id="{{ $id }}"
           name="{{ $multiple ? $name . "[]" : $name }}"
+          x-data="select({!! $config !!})"
           @if ($multiple) multiple @endif
           {{ $attributes->class(["flex-1", "rounded", "border-none", "font-cune-text", "focus:ring-cune-wheat", "ring-red-800" => $errors->has($name)]) }}>
     @foreach ($options as $optionValue => $optionLabel)

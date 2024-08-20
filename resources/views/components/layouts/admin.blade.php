@@ -25,11 +25,11 @@ description: The primary wrapper for all views in the admin panel.
                 Coordinators
               </x-nav.item>
               <x-nav.item route="admin.sports.index"
-                          icon="trophy">
+                          icon="ball-basketball">
                 Sports
               </x-nav.item>
               <x-nav.item route="admin.variants.index"
-                          icon="dumbbell">
+                          icon="star">
                 Variants
               </x-nav.item>
             </ul>
@@ -42,8 +42,8 @@ description: The primary wrapper for all views in the admin panel.
               @method("DELETE")
               <button class="flex flex-1 gap-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-300 hover:bg-gray-700 hover:text-cune-white"
                       href="#">
-                <i class="size-5 flex-shrink-0"
-                   data-lucide="log-out"></i>
+                <x-tabler-logout class="size-5 flex-shrink-0"
+                                 data-lucide="log-out"></x-tabler-logout>
                 Logout
               </button>
             </form>

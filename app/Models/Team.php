@@ -51,6 +51,10 @@ class Team extends Model
             /** @var self */
             $team = static::create($attributes);
 
+            if($captain->isFreeAgentIn($team->season)) {
+                $captain->freeAgents()->where('season_id', $team->season_id)->delete();
+            }
+
             $team->teamCaptain()->associate($captain)->save();
 
             return $team;

@@ -22,8 +22,8 @@ description: The create view for the coordinators in the admin panel.
     <div class="flex gap-1">
       <a class="flex items-center gap-1 rounded-lg bg-cune-blue px-3 py-2 font-semibold text-cune-white hover:bg-gray-900"
          href="{{ route("admin.coordinators.index") }}">
-        <i class="size-4"
-           data-lucide="arrow-left"></i>
+        <x-tabler-arrow-left class="size-4"
+                             data-lucide="arrow-left"></x-tabler-arrow-left>
         Go Back
       </a>
     </div>
@@ -43,9 +43,8 @@ description: The create view for the coordinators in the admin panel.
                      help="Choose the user to make a coordinator. The numbers signify the total number of variants that user coordinates. Use the '+' to create a new user."
                      required />
       <button class="my-auto flex items-center gap-1 rounded-lg bg-cune-blue px-3 py-2 font-semibold text-cune-white hover:bg-gray-900"
-              data-action="modals#showModal"
-              data-modals-modal-id-param="addUserModal"
-              type="button">
+              type="button"
+              x-on:click="$dispatch('show-modal', 'addUserModal')">
         Add User
       </button>
     </div>

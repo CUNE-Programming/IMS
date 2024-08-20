@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use Spatie\IcalendarGenerator\Components\Event;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Enums\EventStatus;
 
 /**
  * \App\Models\Season
@@ -32,6 +36,9 @@ use InvalidArgumentException;
  * @property-read string $semester
  * @property-read SeasonPeriod $period
  * @property Variant $variant The variant that the season belongs to.
+ * @property \Illuminate\Database\Eloquent\Collection<FreeAgent> $freeAgents The free agents for the season.
+ * @property \Illuminate\Database\Eloquent\Collection<Team> $teams The teams for the season.
+ * @property \Illuminate\Database\Eloquent\Collection<Game> $games The games for the season.
  */
 class Season extends Model
 {
@@ -120,6 +127,43 @@ class Season extends Model
             ->where('end_date', '>=', now());
     }
 
+    /**
+     * Scope a query to include the maximum team size for the season.
+     * This will add a `max_team_size` attribute to the query.
+     * This attribute will be the maximum number of players allowed on a team.
+     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
+     * @param  int|Season $season
+     * @return \Illuminate\Database\Eloquent\Builder<self>
+     */
+    protected function scopeWithMaxTeamSize($query)
+    {
+        return $query->addSelect([
+            'max_team_size' => $query
+                ->join('variants', 'variants.id', 'seasons.variant_id')
+                ->select('max_team_size')
+                ->limit(1),
+            'seasons.*',
+        ]);
+    }
+
+    /**
+     * Scope a query to include if the given user is a coordinator for the season.
+     * @param  \Illuminate\Database\Eloquent\Builder<self>  $query
+     * @param  ?User  $user
+     * @return \Illuminate\Database\Eloquent\Builder<self>
+     */
+    protected function scopeWithCoordinatorStatus($query, ?User $user)
+    {
+        return $query->addSelect([
+            'is_coordinator' => DB::table('coordinators')
+                ->leftJoin('seasons', 'coordinators.variant_id', 'seasons.variant_id')
+                ->where('coordinators.user_id', $user?->id)
+                ->select('coordinators.user_id')
+                ->limit(1),
+            'seasons.*',
+        ]);
+    }
+
     // Accessors and Mutators
 
     /**
@@ -149,6 +193,49 @@ class Season extends Model
     }
 
     // Methods
+
+
+    /**
+     * Get the iCal stream for the season.
+     */
+    public function getICalStream()
+    {
+        $calendar = Calendar::create()
+            ->name($this->name . ' Schedule')
+            ->description($this->description)
+            ->refreshInterval(60);
+
+        $calendar->event(Event::create()
+            ->name('Registration Period')
+            ->description('The registration period for the season.')
+            ->fullDay()
+            ->startsAt($this->registration_start)
+            ->endsAt($this->registration_end));
+
+            $calendar->event(Event::create()
+            ->name('Start of Season')
+            ->description('The season starts.')
+            ->fullDay()
+            ->startsAt($this->start_date));
+
+            $calendar->event(Event::create()
+            ->name('End of Season')
+            ->description('The season ends.')
+            ->fullDay()
+            ->startsAt($this->end_date));
+
+
+        $this->games->filter(fn(Game $game) => !$game->status->isCancelled())->map(fn (Game $game) => Event::create()
+            ->name("Game")
+            ->description($game->teams()->select('name')->get()->implode('name', ' vs '))
+            ->alertMinutesBefore(60, "The game is about to start.")
+            ->startsAt($game->scheduled_at)
+            ->endsAt($game->scheduled_at->addMinutes($this->variant()->select('average_duration')->first()->average_duration))
+        )->each(fn (Event $event) => $calendar->event($event));
+
+
+        return $calendar->get();
+    }
 
     /**
      * This method validates the dates for the season.

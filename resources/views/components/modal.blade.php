@@ -12,17 +12,18 @@ the modal when clicked.
 
 @props(["title", "modalId"])
 
-<div data-show="false"
-     data-modal-id="{{ $modalId }}"
-     data-action="click->modals#noop:stop"
-     data-modals-target="modal"
-     {{ $attributes->class(["flex-col", "rounded", "bg-cune-white", "px-4", "py-3", "shadow-md", "ring-1", "ring-cune-blue", "data-[show=false]:hidden", "data-[show=true]:flex", "col-start-2", "row-start-2", "m-auto", "min-w-[50%]", "max-w-[80%]", "z-100"]) }}>
+<div x-data="{ show: false, modalId: @js($modalId) }"
+     x-on:show-modal.window="if($event.detail == modalId) { show = true }"
+     x-cloak
+     x-show="show"
+     x-on:click.outside="show = false"
+     x-transition:enter="fade-in"
+     x-transition:leave="fade-out"
+     {{ $attributes->class(["flex-col", "rounded", "bg-cune-white", "px-4", "py-3", "shadow-md", "ring-1", "ring-cune-blue", "col-start-2", "row-start-2", "m-auto", "min-w-[50%]", "max-w-[80%]", "z-100"]) }}>
   <div class="flex items-center justify-between">
     <h3 class="text-2xl">{{ $title }}</h3>
-    <i class="cursor-pointer transition-colors hover:stroke-gray-700"
-       data-action="click->modals#hideModal"
-       data-modals-modal-id-param="{{ $modalId }}"
-       data-lucide="x"></i>
+    <x-tabler-x class="cursor-pointer transition-colors hover:stroke-gray-700"
+                x-on:click="$dispatch('close'); show = false;"></x-tabler-x>
   </div>
   {{ $slot }}
 </div>

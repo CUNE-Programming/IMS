@@ -12,24 +12,28 @@ description: A form file component
     "value" => null,
     "wrapperClass" => ["flex", "flex-col"],
     "help" => null,
+    "config" => "{}",
 ])
 
 @php
   $wrapperClass = is_array($wrapperClass) ? $wrapperClass : explode(" ", $wrapperClass);
   $id ??= "id--" . str($name)->slug();
   $label ??= str($name)->title();
+
 @endphp
 
 @aware(["model"])
 
-<div data-controller="form--file"
-     data-form--file-file-value="{{ old($name, $value ?? $model?->getAttribute($name)) }}"
-     @class($wrapperClass)>
+<div @class($wrapperClass)
+     x-data="filepond(
+         '{{ old($name, $value ?? $model?->getAttribute($name)) }}',
+         '#{{ $id }}',
+         {!! $config !!}
+     )">
   <label class="font-cune-sub"
          for="{{ $id }}">{{ $label }}</label>
   <input id="{{ $id }}"
          name="{{ $name }}"
-         data-form--file-target="input"
          {{ $attributes->merge(["type" => "file", "value" => old($name, $value ?? $model?->getAttribute($name))]) }}>
   @if ($help)
     <p class="mx-2 text-sm text-cune-slate">{{ $help }}</p>

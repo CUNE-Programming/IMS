@@ -11,8 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectUsersTo('/dashboard');
-        $middleware->redirectGuestsTo('/auth/login');
+        $middleware->redirectUsersTo('/seasons');
+        $middleware->redirectGuestsTo('/login');
         $middleware->alias([
             'admin' => \App\Http\Middleware\RedirectIfAdmin::class,
             'coordinator' => \App\Http\Middleware\RedirectIfCoordinator::class,

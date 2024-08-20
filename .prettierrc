@@ -15,9 +15,7 @@
                 "parser": "blade",
                 "tabWidth": 2,
                 "wrapAttributes": "force-aligned",
-                "sortHtmlAttributes": "code-guide",
-                "sortTailwindcssClasses": true
-
+                "sortHtmlAttributes": "code-guide"
             }
         }
     ]

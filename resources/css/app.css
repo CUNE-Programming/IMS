@@ -73,15 +73,15 @@ p {
 
 
 .from-right {
-    animation: fromRight 0.5s ease-in-out;
+    animation: fromRight 0.25s ease-in-out;
 }
 
 .fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
+    animation: fadeIn 0.25s ease-in forwards;
 }
 
 .fade-out {
-    animation: fadeOut 0.5s ease-in-out forwards;
+    animation: fadeOut 0.25s ease-out forwards;
 }
 
 .pill-btn {
@@ -95,9 +95,13 @@ p {
 
 
 .modal-container {
-    @apply absolute left-0 top-0 z-50 h-full w-full hidden overflow-clip bg-cune-slate/40 data-[show="true"]:grid data-[show="false"]:hidden grid-cols-[0.5fr_2fr_0.5fr] grid-rows-[0.5fr_2fr_0.5fr] place-items-center;
+    @apply absolute left-0 top-0 z-50 h-full w-full overflow-clip bg-cune-slate/40 grid grid-cols-[0.5fr_2fr_0.5fr] grid-rows-[0.5fr_2fr_0.5fr] place-items-center;
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
     margin-bottom: 0;
+}
+
+.trix-button-group--file-tools {
+    display: none !important;
 }

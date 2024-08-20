@@ -5,9 +5,11 @@ date: 2024-08-12
 description: The primary view for the guest panel.
  --}}
 
-<x-layouts.guest>
-  <div class="relative isolate h-[100vh] overflow-hidden bg-gray-900 py-24 sm:py-32 lg:py-64">
-    <img class="absolute inset-0 -z-10 h-full w-full object-cover object-right opacity-10 md:object-center"
+<x-layouts.guest class="h-full bg-cune-blue"
+                 html-class="h-full">
+  <div
+       class="relative isolate h-screen overflow-x-clip overflow-y-scroll bg-gray-900 py-24 sm:py-32 lg:overflow-hidden lg:py-64">
+    <img class="absolute inset-0 -z-10 h-full w-full object-cover opacity-10 md:object-center"
          src="{{ Vite::asset("resources/images/Weller_Tall16x9.jpg") }}"
          alt="CUNE Weller">
     <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl">
@@ -30,9 +32,9 @@ description: The primary view for the guest panel.
         </p>
         <div class="mt-6 flex gap-6 text-xl">
           <a class="rounded-lg bg-cune-wheat px-5 py-3 font-cune-sub text-cune-blue transition-colors hover:bg-cune-blue hover:text-cune-nimbus disabled:opacity-80"
-             href="">Sign up</a>
+             href="{{ route("registration.create") }}">Sign up</a>
           <a class="rounded-lg bg-cune-wheat px-5 py-3 font-cune-sub text-cune-blue transition-colors hover:bg-cune-blue hover:text-cune-nimbus disabled:opacity-80"
-             href="">Login</a>
+             href="{{ route("sessions.create") }}">Login</a>
         </div>
       </div>
       <div
@@ -55,4 +57,11 @@ description: The primary view for the guest panel.
       </div>
     </div>
   </div>
+  <footer class="bg-cune-blue">
+    <div class="px-3 pt-8 xl:pb-3">
+      <p class="text-xs leading-5 text-gray-400">
+        © 2024 Concorida Competitive Programming and Software Development Team. All rights reserved.
+      </p>
+    </div>
+  </footer>
 </x-layouts.guest>

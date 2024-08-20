@@ -42,17 +42,17 @@ description: The index view for the coordinators in the admin panel.
             </div>
           </td>
           <td>
-            <i class="hover:cursor-pointer hover:text-gray-700"
-               data-action="click->modals#showModal"
-               data-modals-modal-id-param="coordinator_{{ $user->id }}"
-               data-lucide="x"></i>
+            <x-tabler-x class="hover:cursor-pointer hover:text-gray-700"
+                        data-modals-modal-id-param="coordinator_{{ $user->id }}"
+                        data-lucide="x"
+                        x-on:click="$dispatch('show-modal', 'coordinator_{{ $user->id }}')"></x-tabler-x>
           </td>
         </tr>
         @push("modals")
           <x-modal title="Remove {{ $user->name }} as Coordinator?"
                    modal-id="coordinator_{{ $user->id }}">
             <form class="flex flex-col"
-                  action="{{ route("admin.coordinators.destroy") }}"
+                  action="{{ route("admin.coordinators.destroy", $coordinator) }}"
                   method="post">
               @csrf
               @method("DELETE")

@@ -1,22 +1,21 @@
 import "./bootstrap";
-import { createIcons, icons } from "lucide";
-import * as htmx from "htmx.org";
-import { Application } from "@hotwired/stimulus";
-import FileController from "./controllers/form/file_controller";
-import ModalsController from "./controllers/modals-controller";
-import CalendarController from "./controllers/calendar-controller";
-import MobileMenuController from "./controllers/mobile-menu-controller";
+import htmx from "htmx.org";
+import Alpine from "alpinejs";
+import resize from "@alpinejs/resize";
+import Trix from "trix";
+import select from "./select";
+import calendar from "./calendar";
+
+import "trix/dist/trix.css";
+import file from "./file";
 
 import.meta.glob(["../fonts/**", "../images/**"]);
 
-createIcons({ icons });
-
 window.htmx = htmx;
-window.Stimulus = Application.start();
+window.Alpine = Alpine;
+Alpine.plugin(resize);
+Alpine.data("select", select);
+Alpine.data("calendar", calendar);
+Alpine.data("filepond", file);
 
-Stimulus.register("form--file", FileController);
-Stimulus.register("modals", ModalsController);
-Stimulus.register("calendar", CalendarController);
-Stimulus.register("mobile-menu", MobileMenuController);
-
-Stimulus.debug = true;
+Alpine.start();

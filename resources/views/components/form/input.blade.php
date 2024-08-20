@@ -19,6 +19,9 @@ description: A form input component
   $wrapperClass = is_array($wrapperClass) ? $wrapperClass : explode(" ", $wrapperClass);
   $id ??= "id--" . str($name)->slug();
   $label ??= str($name)->title();
+  $errorName = str($name)->contains(["[", "]"])
+      ? str($name)->before("[")->__toString() . "." . str($name)->between("[", "]")->__toString()
+      : $name;
 @endphp
 
 @aware(["model"])
@@ -32,7 +35,7 @@ description: A form input component
   @if ($help)
     <p class="mx-2 text-sm text-cune-slate">{{ $help }}</p>
   @endif
-  @error($name)
+  @error($errorName ?? $name)
     <p class="text-sm text-red-800">{{ $message }}</p>
   @enderror
 </div>
